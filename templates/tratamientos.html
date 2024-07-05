@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Tratamientos</h2>
+    <div class="row">
+        <!-- Card 1 -->
+
+        {% for tratamiento in ttos %}
+        
+        <div class="col-12 mb-4">
+            <div class="card h-100">
+                <div class="row g-0 h-100">
+                    <div class="col-md-4 d-flex align-items-center">
+                        <img src="{{tratamiento.foto_tto}}" class="img-fluid rounded-start m-3 fixed-img" alt="Tratamiento 1">
+                    </div>
+                    <div class="col-md-8 d-flex ps-2 flex-column">
+                        <div class="card-body flex-grow-1">
+                            <h5 class="card-title"> {{tratamiento.nombre}} </h5>
+                            <p class="card-text">{{tratamiento.descripcion}}</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-end align-items-end">
+                            <a href="/editar_tratamiento/{{ tratamiento.id }}" class="btn btn-secondary me-2">Editar</a>
+                            <button class="btn btn-custom">${{ tratamiento.precio }}</button>
+                            <button class="btn btn-outline-custom" onclick="addToCart('{{ tratamiento.id }}')">Add to Cart</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+                    
+        {% endfor %}
+        <div class="text-center mb-4">
+            <a href="/nuevo_tratamiento" class="btn btn-success">Agregar Tratamiento</a>
+        </div>
+    </div>
+</div>
+
+<!-- Custom styles for the page -->
+<style>
+    .form-container {
+        max-width: 1000px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #dddddd;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+    .btn-custom {
+        background-color: #FFA500; /* Orange */
+        color: #ffffff;
+        width: fit-content;
+    }
+    .btn-custom:hover {
+        background-color: #FF8C00; /* Darker Orange */
+        color: #ffffff;
+    }
+    .img-fluid {
+        margin: 10px;
+    }
+    .fixed-img {
+        width: 100%;
+        height: 200px; /* Fixed height */
+        max-width: 300px;
+        object-fit: cover; /* Ensure the image covers the area */
+    }
+    .card-footer {
+        background-color: transparent;
+        border-top: none;
+        display: flex;
+        justify-content: flex-end;
+    }
+</style>
+<script>
+    let cart = [];
+
+    function addToCart(treatmentId) {
+        if (!cart.includes(treatmentId)) {
+            cart.push(treatmentId);
+            updateCartUI();
+        }
+    }
+
+    function updateCartUI() {
+        // Update the cart UI (e.g., show cart items, total price)
+        console.log(cart); // For debugging purposes
+    }
+
+    function checkout() {
+        fetch('/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cart: cart })
+        }).then(response => response.json())
+          .then(data => {
+              // Handle the response
+              window.location.href = `/generate_pdf/${data.cart_id}`;
+          });
+    }
+</script>
+
+{% endblock %}
