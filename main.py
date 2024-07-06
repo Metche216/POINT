@@ -81,8 +81,12 @@ def editar_tto(id):
     context={"tratamiento":tto_a_editar, "form":form}
     if request.method == "GET":
         return render_template('editar_tratamiento.html', **context)
-    else:
-        return redirect('tratamientos')
+    elif request.method == "POST":
+        tto_a_editar.nombre = request.form.get('nombre')
+        tto_a_editar.descripcion = request.form.get('descripcion')
+        tto_a_editar.precio = request.form.get('precio')
+        db.session.commit()
+        return redirect('/tratamientos')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -8,7 +8,7 @@
 
         {% for tratamiento in ttos %}
         
-        <div class="col-12 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="card h-100">
                 <div class="row g-0 h-100">
                     <div class="col-md-4 d-flex align-items-center">
@@ -22,7 +22,7 @@
                         <div class="card-footer d-flex justify-content-end align-items-end">
                             <a href="/editar_tratamiento/{{ tratamiento.id }}" class="btn btn-secondary me-2">Editar</a>
                             <button class="btn btn-custom">${{ tratamiento.precio }}</button>
-                            <button class="btn btn-outline-custom" onclick="addToCart('{{ tratamiento.id }}')">Add to Cart</button>
+                            <button class="btn btn-outline-custom ms-2" onclick="addToCart('{{ tratamiento.id }}')">Agregar</button>
                         </div>
                         
                     </div>
@@ -65,6 +65,11 @@
         max-width: 300px;
         object-fit: cover; /* Ensure the image covers the area */
     }
+    .card-title{
+        color: #FF8C00;
+        font-size: 25px;
+    }
+
     .card-footer {
         background-color: transparent;
         border-top: none;

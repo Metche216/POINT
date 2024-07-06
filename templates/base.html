@@ -21,30 +21,61 @@
             border: 1px solid #FFA500; /* Orange border color */
             background-color: transparent; /* Transparent background */
         }
-        
         .btn-outline-custom:hover {
             color: #ffffff; /* White text color on hover */
             background-color: #FFA500; /* Orange background on hover */
             border-color: #FFA500; /* Orange border color on hover */
         }
-        
         .btn-custom:hover {
             background-color: #FF8C00; /* Darker Orange */
             color: #ffffff;
+        }
+        .navbar {
+            background-color: #404040;
+        }
+        #title {
+            color: #FFA500;
+            font-family: Arial, sans-serif;
+            font-size: 45px;
+            padding-left: 15px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .nav-link {
+            color:#ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+        .nav-link.active {
+            color: #FF8C00;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+        .search-form {
+            display: flex;
+            align-items: center;
+        }
+        .search-form input[type="search"] {
+            margin-right: 10px;
+        }
+        .navbar-toggler {
+            border: none;
+        }
+        .navbar-toggler-icon {
+            color: #FFA500;
         }
     </style>
     {% block head %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"><img style="width: 150px" src="{{url_for('static', filename='/menu_logo.png')}}" alt="point-logo"></a>
+            <a id="title" class="navbar-brand" href="{{url_for('home')}}">POINT</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Inicio</a>
                     </li>
@@ -57,9 +88,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Sobre POINT</a>
                     </li>
-                    <form class="d-flex" method="GET" action="/search">
+                    <form class="search-form d-flex" method="GET" action="/search">
                         <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search" name="query">
-                        <button class="btn btn-outline-custom" type="submit">Buscar</button>
+                        <button class="btn btn-outline-light" type="submit">Buscar</button>
                     </form>
                 </ul>
             </div>
