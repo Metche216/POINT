@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quote</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .treatment { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Quote</h1>
+    <ul>
+        {% for treatment in treatments %}
+            <li class="treatment">
+                <h2>{{ treatment.nombre }}</h2>
+                <p>{{ treatment.descripcion }}</p>
+                <p>Precio: ${{ treatment.precio }}</p>
+                <p>Cantidad: {{ treatment.quantity }}</p>
+                <p>Total: ${{ treatment.total }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <p>Total: ${{ treatments | sum(attribute='total') }}</p>
+</body>
+</html>

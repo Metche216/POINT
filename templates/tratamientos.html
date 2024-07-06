@@ -3,36 +3,42 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="text-center mb-4">Tratamientos</h2>
+    
     <div class="row">
-        <!-- Card 1 -->
-
-        {% for tratamiento in ttos %}
-        
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="row g-0 h-100">
-                    <div class="col-md-4 d-flex align-items-center">
-                        <img src="{{tratamiento.foto_tto}}" class="img-fluid rounded-start m-3 fixed-img" alt="Tratamiento 1">
-                    </div>
-                    <div class="col-md-8 d-flex ps-2 flex-column">
-                        <div class="card-body flex-grow-1">
-                            <h5 class="card-title"> {{tratamiento.nombre}} </h5>
-                            <p class="card-text">{{tratamiento.descripcion}}</p>
+        <div class="col-md-9">
+            <div id="treatments-section">
+                <div class="row">
+                    {% for tratamiento in ttos %}
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100">
+                            <div class="row g-0 h-100">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    <img src="{{tratamiento.foto_tto}}" class="img-fluid rounded-start m-3 fixed-img" alt="Tratamiento 1">
+                                </div>
+                                <div class="col-md-8 d-flex ps-2 flex-column">
+                                    <div class="card-body flex-grow-1">
+                                        <h5 class="card-title"> {{tratamiento.nombre}} <a href="/editar_tratamiento/{{ tratamiento.id }}" class="text-secondary h6">editar</a></h5>
+                                        <p class="card-text">{{tratamiento.descripcion}}</p>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between align-items-center">
+                                        
+                                        <span class="price">${{ tratamiento.precio }}</span>
+                                        <button class="btn btn-outline-custom ms-2" onclick="addToCart('{{ tratamiento.id }}',1, '{{tratamiento.nombre}}')">Agregar</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-footer d-flex justify-content-end align-items-end">
-                            <a href="/editar_tratamiento/{{ tratamiento.id }}" class="btn btn-secondary me-2">Editar</a>
-                            <button class="btn btn-custom">${{ tratamiento.precio }}</button>
-                            <button class="btn btn-outline-custom ms-2" onclick="addToCart('{{ tratamiento.id }}')">Agregar</button>
-                        </div>
-                        
                     </div>
+                    {% endfor %}
+                </div>
+                <div class="text-center mb-4">
+                    <a href="/nuevo_tratamiento" class="btn btn-success">Agregar Tratamiento</a>
                 </div>
             </div>
         </div>
-                    
-        {% endfor %}
-        <div class="text-center mb-4">
-            <a href="/nuevo_tratamiento" class="btn btn-success">Agregar Tratamiento</a>
+        <div class="col-md-3 pb-3">
+            <!-- Cart Content Section -->
+            <div id="cart-content" class="pb-5"></div>
         </div>
     </div>
 </div>
@@ -65,46 +71,92 @@
         max-width: 300px;
         object-fit: cover; /* Ensure the image covers the area */
     }
-    .card-title{
+    .card-title {
         color: #FF8C00;
         font-size: 25px;
     }
-
     .card-footer {
         background-color: transparent;
         border-top: none;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .price {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #FF8C00;
+    }
+    #cart-content {
+        background-color: #f8f9fa; /* Light gray background */
+        border: 1px solid #ddd; /* Light gray border */
+        padding: 20px;
+        border-radius: 10px;
+        position: sticky;
+        top: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        height: 100%;
     }
 </style>
+
 <script>
     let cart = [];
 
-    function addToCart(treatmentId) {
-        if (!cart.includes(treatmentId)) {
-            cart.push(treatmentId);
-            updateCartUI();
+    function addToCart(treatmentId, quantity, treatmentName) {
+        const itemIndex = cart.findIndex(item => item.treatmentId === treatmentId);
+        if (itemIndex === -1) {
+            cart.push({ treatmentId: treatmentId, quantity: quantity, name: treatmentName });
+        } else {
+            cart[itemIndex].quantity += quantity;
         }
+        updateCartUI();
     }
 
     function updateCartUI() {
-        // Update the cart UI (e.g., show cart items, total price)
-        console.log(cart); // For debugging purposes
+        const cartContentDiv = document.getElementById('cart-content');
+        cartContentDiv.innerHTML = ''; // Clear previous content
+
+        if (cart.length > 0) {
+            let cartHtml = '<h2>Your Cart</h2><ul class="list-group mb-3">';
+            cart.forEach((item, index) => {
+                cartHtml += `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${index + 1}. ${item.name} - Cantidad: ${item.quantity}
+                        <button class="btn btn-outline-danger btn-sm" onclick="removeFromCart(${index})">Retirar</button>
+                    </li>
+                `;
+            });
+            cartHtml += '</ul>';
+            cartHtml += '<button class="btn btn-outline-success w-100" onclick="checkout()">Crear Plan</button>';
+            cartContentDiv.innerHTML = cartHtml;
+        } else {
+            cartContentDiv.innerHTML = `
+                <p>No hay tratamientos seleccionados.</p>
+                <button class="btn btn-outline-success w-100" disabled>Crear Plan</button>
+            `;
+        }
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartUI();
     }
 
     function checkout() {
+        const patientId = 1; // Replace with the actual patient ID or get it from the user input
         fetch('/checkout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ cart: cart })
+            body: JSON.stringify({ cart: cart, patientId: patientId })
         }).then(response => response.json())
           .then(data => {
-              // Handle the response
-              window.location.href = `/generate_pdf/${data.cart_id}`;
+              window.location.href = `/generate_pdf/${data.budget_id}`;
           });
     }
-</script>
 
+    // Initialize the cart UI on page load
+    document.addEventListener('DOMContentLoaded', updateCartUI);
+</script>
 {% endblock %}
