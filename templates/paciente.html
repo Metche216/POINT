@@ -1,34 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-3"><a href="{{url_for('pacientes')}}"><img src="{{url_for('static', filename='/images/icons/arrow-left.svg')}}" height="40" alt=""></a></div>
+<div class="container mt-3">
+    <a href="{{url_for('pacientes')}}">
+        <img src="{{url_for('static', filename='/images/icons/arrow-left.svg')}}" height="40" alt="">
+    </a>
+</div>
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Información del Paciente</h2>
-    
-    <div class="card mb-4">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img src="{{ paciente.photo_url or url_for('static', filename='/images/default-photo.png') }}" class="img-fluid rounded-start" alt="Foto del Paciente">
+    <div class="profile-header mb-4 p-4" style="background-color: #313131;">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <img src="{{ url_for('static', filename=paciente.photo_url) }}" id="patient-photo" class="img-fluid rounded" alt="Foto del Paciente">
             </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">{{ paciente.name }}</h5>
-                    <p class="card-text"><strong>Teléfono:</strong> {{ paciente.phone }}</p>
-                </div>
+            <div class="col-md-8" id="profile-info">
+                <h2 class="text-white">{{ paciente.name }}</h2>
+                <p class="text-white"><strong>Teléfono:</strong> {{ paciente.phone }}</p>
+            </div>
+            <div class="col-md-8 d-none" id="profile-form">
+                <form method="POST" action="{{ url_for('editar_paciente', id=paciente.id) }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="name" class="form-label text-white">Nombre</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ paciente.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label text-white">Teléfono</label>
+                        <input type="text" class="form-control" id="phone" name="phone" value="{{ paciente.phone }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="photo" class="form-label text-white">Foto del Paciente</label>
+                        <input type="file" class="form-control" id="photo" name="photo">
+                    </div>
+                    <button type="submit" class="btn btn-ok">Guardar</button>
+                    <button type="button" class="btn btn-outline-ok" id="cancel-edit">Cancelar</button>
+                </form>
+            </div>
+            <div class="col-md-2 text-end">
+                <button class="btn btn-outline-light" id="edit-profile-btn">Editar Perfil</button>
             </div>
         </div>
     </div>
-
-    <h3 class="mb-4">Presupuestos</h3>
-    <div class="text-end my-3">
-        <a href="{{ url_for('presupuesto', id=paciente.id) }}" class="btn btn-ok">Nuevo plan</a>
+    
+    <div class="activity-search mb-4">
+        <h3 class="mb-3">Presupuestos</h3>
+        <div class="d-flex justify-content-between">
+            <input type="text" class="form-control me-2" placeholder="Buscar en Presupuestos">
+            <a href="{{ url_for('presupuesto', id=paciente.id) }}" class="btn btn-ok">Nuevo plan</a>
+        </div>
     </div>
+    
     <div class="accordion" id="accordionExample">
         {% for presupuesto in presupuestos %}
         <div class="accordion-item">
             <h2 class="accordion-header" id="heading{{ presupuesto.id }}">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ presupuesto.id }}" aria-expanded="false" aria-controls="collapse{{ presupuesto.id }}">
-                    {{ presupuesto.formatted_date }}
+                    <img src="{{url_for('static', filename='/images/icons/clipboard-check.svg')}}" class="me-2" alt="">{{ presupuesto.formatted_date }}
                 </button>
             </h2>
             <div id="collapse{{ presupuesto.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ presupuesto.id }}" data-bs-parent="#accordionExample">
@@ -47,38 +72,95 @@
     </div>
 </div>
 
-<!-- ok styles for the page -->
+<!-- Custom styles for the page -->
 <style>
-    .card {
+    #patient-photo {
+        border-radius: 15px;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        transition: width 0.3s, height 0.3s;
+    }
+
+    #profile-form #patient-photo {
+        width: 150px;
+        height: 150px;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        border-radius: 10px;
+    }
+
+    .profile-header h2 {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .activity-search {
         margin-bottom: 20px;
     }
-    .card-title {
-        font-size: 24px;
-        font-weight: bold;
-    }
-    .accordion-button {
-        font-size: 20px;
-        font-weight: bold;
-    }
+
     .btn-ok {
         background-color: #313131;
         font-weight: 700;
         color: #FFA500;
     }
+
     .btn-outline-ok {
-        color: #FFA500; /* Orange text color */
-        border: 1px solid #FFA500; /* Orange border color */
-        background-color: transparent; /* Transparent background */
+        color: #FFA500;
+        border: 1px solid #FFA500;
+        background-color: transparent;
     }
+
     .btn-outline-ok:hover {
-        color: #ffffff; /* White text color on hover */
-        background-color: #FFA500; /* Orange background on hover */
-        border-color: #FFA500; /* Orange border color on hover */
+        color: #ffffff;
+        background-color: #FFA500;
+        border-color: #FFA500;
     }
+
     .btn-ok:hover {
-        background-color: #ffffff; /* Darker Orange */
+        background-color: #ffffff;
         color: #313131;
         border: 1px solid #313131;
     }
+
+    .accordion-button {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .rounded {
+        border-radius: 15px !important;
+    }
+
+    @media (min-width: 768px) {
+        #patient-photo {
+            width: 150px;
+            height: 150px;
+        }
+        #profile-form #patient-photo {
+            width: 150px;
+            height: 150px;
+        }
+    }
 </style>
+
+<!-- JavaScript for toggling edit mode -->
+<script>
+    document.getElementById('edit-profile-btn').addEventListener('click', function() {
+        document.getElementById('profile-info').classList.add('d-none');
+        document.getElementById('profile-form').classList.remove('d-none');
+        document.getElementById('edit-profile-btn').classList.add('d-none');
+        document.getElementById('patient-photo').classList.add('full-height');
+    });
+
+    document.getElementById('cancel-edit').addEventListener('click', function() {
+        document.getElementById('profile-form').classList.add('d-none');
+        document.getElementById('profile-info').classList.remove('d-none');
+        document.getElementById('edit-profile-btn').classList.remove('d-none');
+        document.getElementById('patient-photo').classList.remove('full-height');
+    });
+</script>
 {% endblock %}

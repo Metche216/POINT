@@ -6,6 +6,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, URL, Length
 from datetime import datetime, timezone
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 
@@ -14,8 +16,11 @@ app = Flask(__name__)
 class Base(DeclarativeBase):
     pass
 
+UPLOAD_FOLDER = 'static/uploads'
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///point.db'
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
@@ -35,6 +40,7 @@ class Patient(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     phone: Mapped[str] = mapped_column(String(20), nullable=False)
+    photo_url: Mapped[str] = mapped_column(String(250), default='/static/images/profile.jpg')
     presupuestos = relationship('Presupuesto', back_populates='patient')
 
 class Presupuesto(Base):
@@ -72,7 +78,13 @@ class NuevoPacienteForm(FlaskForm):
     phone = StringField('Teléfono', validators=[DataRequired(), Length(min=7, max=20)])
     submit = SubmitField('Agregar Paciente')
 
-    
+
+#Helpers
+def save_photo(file):
+    filename = secure_filename(file.filename)
+    file_path = os.path.join('static', 'uploads', filename)
+    file.save(file_path)
+    return file_path.replace('\\', '/').replace('static/','')
 
 
 @app.route("/")
@@ -111,6 +123,17 @@ def nuevo_paciente():
         return redirect('pacientes')
     return render_template('nuevo_paciente.html', form=form)
 
+@app.route("/editar_paciente/<int:id>", methods=["GET", "POST"])
+def editar_paciente(id):
+    patient = db.session.get(Patient, id)
+    if patient:
+        patient.name = request.form.get('name')
+        patient.phone = request.form.get('phone')
+        photo = request.files.get('photo')
+        if photo:
+            patient.photo_url = save_photo(photo)
+        db.session.commit()
+    return redirect(url_for('paciente', id=id))
 
 @app.route('/tratamientos')
 def tratamientos():
