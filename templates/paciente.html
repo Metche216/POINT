@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-3"><a href="{{url_for('pacientes')}}"><img src="{{url_for('static', filename='/images/icons/arrow-left.svg')}}" height="40" alt=""></a></div>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Información del Paciente</h2>
+    
+    <div class="card mb-4">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{ paciente.photo_url or url_for('static', filename='/images/default-photo.png') }}" class="img-fluid rounded-start" alt="Foto del Paciente">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ paciente.name }}</h5>
+                    <p class="card-text"><strong>Teléfono:</strong> {{ paciente.phone }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-4">Presupuestos</h3>
+    <div class="text-end my-3">
+        <a href="{{ url_for('presupuesto', id=paciente.id) }}" class="btn btn-ok">Nuevo plan</a>
+    </div>
+    <div class="accordion" id="accordionExample">
+        {% for presupuesto in presupuestos %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ presupuesto.id }}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ presupuesto.id }}" aria-expanded="false" aria-controls="collapse{{ presupuesto.id }}">
+                    {{ presupuesto.formatted_date }}
+                </button>
+            </h2>
+            <div id="collapse{{ presupuesto.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ presupuesto.id }}" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <p>Detalles del tratamiento:</p>
+                    {% for treatment in presupuesto.treatments %}
+                    <p>{{ treatment.nombre }} - Cantidad: {{ treatment.quantity }}</p>
+                    {% endfor %}
+                    <form method="POST" action="{{ url_for('eliminar_presupuesto', id=presupuesto.id) }}">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ok styles for the page -->
+<style>
+    .card {
+        margin-bottom: 20px;
+    }
+    .card-title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .accordion-button {
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .btn-ok {
+        background-color: #313131;
+        font-weight: 700;
+        color: #FFA500;
+    }
+    .btn-outline-ok {
+        color: #FFA500; /* Orange text color */
+        border: 1px solid #FFA500; /* Orange border color */
+        background-color: transparent; /* Transparent background */
+    }
+    .btn-outline-ok:hover {
+        color: #ffffff; /* White text color on hover */
+        background-color: #FFA500; /* Orange background on hover */
+        border-color: #FFA500; /* Orange border color on hover */
+    }
+    .btn-ok:hover {
+        background-color: #ffffff; /* Darker Orange */
+        color: #313131;
+        border: 1px solid #313131;
+    }
+</style>
+{% endblock %}

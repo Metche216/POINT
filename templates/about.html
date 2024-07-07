@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-3">
+    <a href="{{url_for('home')}}"><img src="{{url_for('static', filename='/images/icons/arrow-left.svg')}}" height="40" alt=""></a>
+</div>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Sobre POINT</h2>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Nuestra Misión</h5>
+            <p class="card-text">
+                En POINT, nuestra misión es simplificar y optimizar la gestión de tratamientos faciales estéticos. Nos dedicamos a proporcionar herramientas digitales eficientes que ayuden a los profesionales de la estética a ofrecer un servicio de calidad superior a sus pacientes.
+            </p>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">¿Qué Ofrecemos?</h5>
+            <p class="card-text">
+                POINT es una plataforma integral diseñada para facilitar la gestión de pacientes y tratamientos. Ofrecemos una interfaz intuitiva que permite a los profesionales registrar, actualizar y seguir el progreso de los tratamientos faciales estéticos de manera eficiente y organizada.
+            </p>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Nuestro Equipo</h5>
+            <p class="card-text">
+                Nuestro equipo está compuesto por expertos en tecnología y estética con años de experiencia en sus respectivos campos. Estamos comprometidos en desarrollar soluciones que realmente marquen la diferencia en el día a día de los profesionales de la estética.
+            </p>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Contacto</h5>
+            <p class="card-text">
+                Si tienes alguna pregunta o necesitas más información sobre nuestros servicios, no dudes en contactarnos a través de nuestro correo electrónico: contacto@point.com o llamando al +34 123 456 789.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Custom styles for the page -->
+<style>
+    .card {
+        margin-bottom: 20px;
+    }
+    .card-title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .card-text {
+        font-size: 18px;
+    }
+</style>
+{% endblock %}

@@ -5,22 +5,22 @@
     <title>Quote</title>
     <style>
         body { font-family: Arial, sans-serif; }
-        .treatment { margin-bottom: 20px; }
+        .tratamiento { margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <h1>Quote</h1>
     <ul>
-        {% for treatment in treatments %}
-            <li class="treatment">
-                <h2>{{ treatment.nombre }}</h2>
-                <p>{{ treatment.descripcion }}</p>
-                <p>Precio: ${{ treatment.precio }}</p>
-                <p>Cantidad: {{ treatment.quantity }}</p>
-                <p>Total: ${{ treatment.total }}</p>
+        {% for tratamiento in tratamientos %}
+            <li class="tratamiento">
+                <h2>{{ tratamiento.nombre }}</h2>
+                <p>{{ tratamiento.descripcion }}</p>
+                <p>Precio: ${{ tratamiento.precio }}</p>
+                <p>Cantidad: {{ tratamiento.quantity }}</p>
+                <p>Total: ${{ tratamiento.total }}</p>
             </li>
         {% endfor %}
     </ul>
-    <p>Total: ${{ treatments | sum(attribute='total') }}</p>
+    <p>Total: ${{ tratamientos | sum(attribute='total') }}</p>
 </body>
 </html>

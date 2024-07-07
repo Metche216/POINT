@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-3"><a href="{{url_for('home')}}"><img src="{{url_for('static', filename='/images/icons/arrow-left.svg')}}" height="40" alt=""></a></div>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Lista de Pacientes</h2>
+
+    <!-- Search Box -->
+    <div class="mb-4">
+        <input type="text" id="searchBox" class="form-control" placeholder="Buscar paciente...">
+    </div>
+
+    <div class="list-group" id="patientList">
+        {% for paciente in pacientes %}
+        <a href="{{ url_for('paciente', id=paciente.id) }}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ paciente.name }}</h5>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+        <a href="{{url_for('nuevo_paciente')}}" class="btn btn-custom">Agregar Nuevo Paciente</a>
+    </div>
+</div>
+
+<!-- Custom styles for the page -->
+<style>
+    .list-group-item {
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #dddddd;
+    }
+</style>
+
+<!-- JavaScript for search functionality -->
+<script>
+    document.getElementById('searchBox').addEventListener('input', function() {
+        let filter = this.value.toLowerCase();
+        let patientList = document.getElementById('patientList');
+        let patients = patientList.getElementsByClassName('list-group-item');
+        
+        Array.from(patients).forEach(function(patient) {
+            let patientName = patient.getElementsByTagName('h5')[0].textContent.toLowerCase();
+            if (patientName.includes(filter)) {
+                patient.style.display = '';
+            } else {
+                patient.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}
