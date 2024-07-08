@@ -1,18 +1,46 @@
 {% extends "base.html" %}
 
-{% block title %}POINT{% endblock %}
+{% block title %}Dr. Matías Hernán Etcheverry{% endblock %}
+{% block head %}
+<style>
+  
+.hero h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #FFA500;
+}
+.hero p {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+.btn-main {
+    background-color: #FFA500;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px 20px;
+}
+.btn-main:hover {
+    background-color: #FF8C00;
+}
 
+</style>
+{% endblock %}
 {% block content %}
-<div class="px-4 my-5 text-center">
-    <img class="d-block mx-auto mb-4" src="{{url_for('static', filename='/images/favico.png')}}" alt="" height="100" width="100" height="150">
-    <h1 class="display-5 fw-bold text-body-emphasis">Innova Simplifica Eleva</h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="lead mb-4"></p>
-      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <button type="button" class="btn btn-custom btn-lg px-4 gap-3">Crear presupuesto</button>
-        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Buscar presupuesto</button>
+
+
+<div class="container col-xxl-8 px-4 py-5">
+  <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+    <div class="col-10 col-sm-8 col-lg-6">
+      <img src="{{url_for('static', filename='images/background.jpg')}}" class="d-block mx-lg-auto img-fluid rounded-5" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+    </div>
+    <div class="col-lg-6">
+      <h1 class="display-5 fw-bold lh-1 mb-3">Dr. Matías Hernán Etcheverry</h1>
+      <p class="lead"> Tratamientos de armonización y rejuvenecimiento facial</p>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <a href="{{url_for('nuevo_paciente')}}"><button type="button" class="btn btn-main px-4 me-md-2">Nuevo Paciente</button></a>
+        <a href="{{url_for('tratamientos')}}"><button type="button" class="btn btn-outline-main btn-lg px-4">Tratamientos Disponibles</button></a>
       </div>
     </div>
   </div>
-
+</div>
 {% endblock %}
