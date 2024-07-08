@@ -58,13 +58,36 @@
             </h2>
             <div id="collapse{{ presupuesto.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ presupuesto.id }}" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    <p>Detalles del tratamiento:</p>
-                    {% for treatment in presupuesto.treatments %}
-                    <p>{{ treatment.nombre }} - Cantidad: {{ treatment.quantity }}</p>
-                    {% endfor %}
-                    <form method="POST" action="{{ url_for('eliminar_presupuesto', id=presupuesto.id) }}">
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Tratamiento</th>
+                                <th>Cantidad</th>
+                                <th>Importe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for treatment in presupuesto.treatments %}
+                            <tr>
+                                <td>{{ treatment.treatment.nombre }}</td>
+                                <td>{{ treatment.quantity }}</td>
+                                <td>{{ treatment.treatment.precio }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-end"><strong>Total</strong></td>
+                                <td>{{ presupuesto.total }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div class="text-end">
+                        <a href="{{ url_for('emitir_presupuesto', id=presupuesto.id) }}" class="btn btn-outline-ok">Emitir</a>
+                        <form method="POST" action="{{ url_for('eliminar_presupuesto', id=presupuesto.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

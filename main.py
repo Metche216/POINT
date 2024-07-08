@@ -101,12 +101,16 @@ def paciente(id):
     paciente = db.session.get(Patient, id)
     presupuestos = db.session.query(Presupuesto).filter_by(patient_id=id).all()
     formatted_presupuestos = []
-
+    
+    
     for presupuesto in presupuestos:
+        total = sum(treatment.quantity * treatment.treatment.precio for treatment in presupuesto.treatments)
+        
         formatted_presupuesto = {
             "id": presupuesto.id,
             "formatted_date": presupuesto.created_at.strftime("%d-%m-%Y"),
-            "treatments": presupuesto.treatments
+            "treatments": presupuesto.treatments,
+            "total":total,
         }
         formatted_presupuestos.append(formatted_presupuesto)
 
@@ -147,6 +151,10 @@ def presupuesto(id):
     todos_los_ttos = db.session.query(Tratamiento).filter_by(deleted=False).all()
     return render_template('presupuesto.html', ttos=todos_los_ttos, paciente=paciente)
 
+@app.route("/emitir_presupuesto")
+def emitir_presupuesto():
+    return render_template('emision.html')
+
 @app.route("/eliminar_presupuesto/<int:id>", methods=["POST"])
 def eliminar_presupuesto(id):
     presupuesto_a_eliminar = db.session.get(Presupuesto, id)
@@ -174,7 +182,6 @@ def nuevo_tto():
             return redirect('tratamientos')
         
     return render_template('nuevo_tto.html', form=nuevo_form)
-
 
 
 
